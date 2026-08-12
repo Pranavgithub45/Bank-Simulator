@@ -1,162 +1,1121 @@
 import { api } from '../api.js';
 import { toast } from '../toast.js';
-import { formatCurrency, formatDate, stampClass, humanizeReason, escapeHtml, displayStatus } from '../utils.js';
-import { buildPaymentPayload, generatePrn, getBankConstants } from '../crypto.js';
+import {
+  formatCurrency,
+  formatDate,
+  stampClass,
+  humanizeReason,
+  escapeHtml,
+  displayStatus
+} from '../utils.js';
 
-const stepAmount = document.getElementById('paymentStepAmount');
-const stepLogin = document.getElementById('paymentStepLogin');
-const stepResult = document.getElementById('paymentStepResult');
+import {
+  buildPaymentPayload,
+  generatePrn,
+  getBankConstants
+} from '../crypto.js';
 
-const form = document.getElementById('paymentForm');
-const amountInput = document.getElementById('amountInput');
-const merchantNoteInput = document.getElementById('merchantNote');
-const payBtn = document.getElementById('payBtn');
 
-const bankRequestSummary = document.getElementById('bankRequestSummary');
-const accountGrid = document.getElementById('accountGrid');
-const callbackBehaviorSelect = document.getElementById('callbackBehaviorSelect');
+/* ============================================================
+   PAGE ELEMENTS
+   ============================================================ */
 
-const receiptCard = document.getElementById('receiptCard');
-const newPaymentBtn = document.getElementById('newPaymentBtn');
+const form =
+    document.getElementById('paymentForm');
+
+const amountInput =
+    document.getElementById('amountInput');
+
+const merchantNoteInput =
+    document.getElementById('merchantNote');
+
+const payBtn =
+    document.getElementById('payBtn');
+
+
+/* ============================================================
+   PAYMENT MODAL
+   ============================================================ */
+
+const paymentModalBackdrop =
+    document.getElementById('paymentModalBackdrop');
+
+const paymentModalClose =
+    document.getElementById('paymentModalClose');
+
+const modalStepMethod =
+    document.getElementById('modalStepMethod');
+
+const modalStepAccount =
+    document.getElementById('modalStepAccount');
+
+const modalStepProcessing =
+    document.getElementById('modalStepProcessing');
+
+const modalStepResult =
+    document.getElementById('modalStepResult');
+
+
+const continueNetbankingBtn =
+    document.getElementById(
+        'continueNetbankingBtn'
+    );
+
+
+const accountGrid =
+    document.getElementById(
+        'accountGrid'
+    );
+
+
+const callbackBehaviorSelect =
+    document.getElementById(
+        'callbackBehaviorSelect'
+    );
+
+
+const modalAmount =
+    document.getElementById(
+        'modalAmount'
+    );
+
+
+const modalMerchant =
+    document.getElementById(
+        'modalMerchant'
+    );
+
+
+const accountModalAmount =
+    document.getElementById(
+        'accountModalAmount'
+    );
+
+
+const accountModalPrn =
+    document.getElementById(
+        'accountModalPrn'
+    );
+
+
+const processingMessage =
+    document.getElementById(
+        'processingMessage'
+    );
+
+
+const processingStepOne =
+    document.getElementById(
+        'processingStepOne'
+    );
+
+
+const processingStepTwo =
+    document.getElementById(
+        'processingStepTwo'
+    );
+
+
+const processingStepThree =
+    document.getElementById(
+        'processingStepThree'
+    );
+
+
+const receiptCard =
+    document.getElementById(
+        'receiptCard'
+    );
+
+
+const newPaymentBtn =
+    document.getElementById(
+        'newPaymentBtn'
+    );
+
+
+/* ============================================================
+   STATE
+   ============================================================ */
 
 let currentPrn = null;
+
 let currentAmount = null;
-const RETURN_URL = 'http://localhost:8082/billdesk/callback-receiver';
 
-function setLoading(btn, loading) {
-  btn.disabled = loading;
-  btn.querySelector('.btn-label').style.opacity = loading ? '0' : '1';
-  btn.querySelector('.spinner').hidden = !loading;
-}
+let currentMerchant =
+    'BillDeskTestMerchantName';
 
-function showStep(step) {
-  [stepAmount, stepLogin, stepResult].forEach((s) => s.classList.add('hidden'));
-  step.classList.remove('hidden');
-}
 
-function resetFlow() {
-  form.reset();
-  callbackBehaviorSelect.value = '';
-  currentPrn = null;
-  currentAmount = null;
-  showStep(stepAmount);
-}
+const RETURN_URL =
+    'http://localhost:8082/billdesk/callback-receiver';
 
-// ---------- Step 1: submit encrypted payment request ----------
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const amount = Number(amountInput.value);
-  if (!amount || amount <= 0) {
-    toast.error('Enter a valid amount.');
+
+/* ============================================================
+   BUTTON LOADING
+   ============================================================ */
+
+function setLoading(
+    button,
+    loading
+) {
+
+  if (!button) {
     return;
   }
 
-  setLoading(payBtn, true);
-  try {
-    const prn = generatePrn();
-    const merchantName = merchantNoteInput.value.trim() || 'BillDeskTestMerchantName';
+  button.disabled = loading;
 
-    const payload = await buildPaymentPayload({
-      prn,
-      amount: amount.toFixed(2),
-      merchantName,
-      returnUrl: RETURN_URL,
-    });
+  const label =
+      button.querySelector(
+          '.btn-label'
+      );
 
-    const response = await api.submitPaymentRequest(payload.mercode, payload.encDhanBankData);
+  const spinner =
+      button.querySelector(
+          '.spinner'
+      );
 
-    currentPrn = response.prn;
-    currentAmount = amount;
-    toast.success(`Payment request accepted — PRN ${response.prn}`);
-    await showLoginStep();
-  } catch (err) {
-    toast.error(`Payment request failed: ${err.message}`);
-  } finally {
-    setLoading(payBtn, false);
+  if (label) {
+    label.style.opacity =
+        loading ? '0' : '1';
   }
-});
 
-// ---------- Step 2: bank login / account selection ----------
-async function showLoginStep() {
-  const c = await getBankConstants();
-  bankRequestSummary.innerHTML = `
-    <div><b>PRN</b> ${escapeHtml(currentPrn)}</div>
-    <div><b>Amount</b> ${formatCurrency(currentAmount, c.currency)}</div>
-    <div><b>Merchant</b> ${escapeHtml(c.mercode)}</div>
-    <div><b>Callback URL</b> ${escapeHtml(RETURN_URL)} <span class="muted">(public echo endpoint, for demo purposes)</span></div>
+  if (spinner) {
+    spinner.hidden =
+        !loading;
+  }
+}
+
+
+/* ============================================================
+   MODAL HELPERS
+   ============================================================ */
+
+function showModalStep(step) {
+
+  [
+    modalStepMethod,
+    modalStepAccount,
+    modalStepProcessing,
+    modalStepResult
+  ].forEach((element) => {
+
+    element.classList.add(
+        'hidden'
+    );
+
+  });
+
+  step.classList.remove(
+      'hidden'
+  );
+}
+
+
+function openPaymentModal() {
+
+  paymentModalBackdrop.classList.remove(
+      'hidden'
+  );
+
+  document.body.classList.add(
+      'modal-open'
+  );
+
+  showModalStep(
+      modalStepMethod
+  );
+}
+
+
+function closePaymentModal() {
+
+  paymentModalBackdrop.classList.add(
+      'hidden'
+  );
+
+  document.body.classList.remove(
+      'modal-open'
+  );
+}
+
+
+function resetModal() {
+
+  showModalStep(
+      modalStepMethod
+  );
+
+  processingStepOne.classList.add(
+      'active'
+  );
+
+  processingStepTwo.classList.remove(
+      'active'
+  );
+
+  processingStepThree.classList.remove(
+      'active'
+  );
+
+  processingMessage.textContent =
+      'Connecting securely to Dhanlaxmi Bank…';
+
+  accountGrid.innerHTML = '';
+
+  callbackBehaviorSelect.value = '';
+
+}
+
+
+/* ============================================================
+   RESET PAYMENT PAGE
+   ============================================================ */
+
+function resetFlow() {
+
+  form.reset();
+
+  currentPrn = null;
+
+  currentAmount = null;
+
+  currentMerchant =
+      'BillDeskTestMerchantName';
+
+  resetModal();
+
+  closePaymentModal();
+}
+
+
+/* ============================================================
+   MAIN PAYMENT FORM
+   ============================================================ */
+
+form.addEventListener(
+    'submit',
+    async (event) => {
+
+      event.preventDefault();
+
+      const amount =
+          Number(
+              amountInput.value
+          );
+
+      if (!amount || amount <= 0) {
+
+        toast.error(
+            'Enter a valid payment amount.'
+        );
+
+        return;
+      }
+
+
+      setLoading(
+          payBtn,
+          true
+      );
+
+
+      try {
+
+        currentAmount =
+            amount;
+
+        currentMerchant =
+            merchantNoteInput.value.trim()
+            || 'BillDeskTestMerchantName';
+
+
+        /*
+         * Generate PRN exactly like the
+         * previous frontend flow.
+         */
+        const prn =
+            generatePrn();
+
+
+        /*
+         * Build the existing encrypted
+         * payment request.
+         */
+        const payload =
+            await buildPaymentPayload({
+              prn,
+              amount:
+                  amount.toFixed(2),
+              merchantName:
+              currentMerchant,
+              returnUrl:
+              RETURN_URL,
+            });
+
+
+        /*
+         * Existing backend endpoint.
+         * NOTHING in backend flow is changed.
+         */
+        const response =
+            await api.submitPaymentRequest(
+                payload.mercode,
+                payload.encDhanBankData
+            );
+
+
+        currentPrn =
+            response.prn;
+
+
+        /*
+         * Fill popup summary.
+         */
+        modalAmount.textContent =
+            formatCurrency(
+                currentAmount
+            );
+
+        modalMerchant.textContent =
+            currentMerchant;
+
+        accountModalAmount.textContent =
+            formatCurrency(
+                currentAmount
+            );
+
+        accountModalPrn.textContent =
+            currentPrn;
+
+
+        toast.success(
+            'Payment request accepted.'
+        );
+
+
+        /*
+         * Open realistic bank popup.
+         */
+        openPaymentModal();
+
+
+      } catch (error) {
+
+        toast.error(
+            `Payment request failed: ${error.message}`
+        );
+
+      } finally {
+
+        setLoading(
+            payBtn,
+            false
+        );
+
+      }
+
+    }
+);
+
+
+/* ============================================================
+   STEP 1 → STEP 2
+   NET BANKING
+   ============================================================ */
+
+continueNetbankingBtn.addEventListener(
+    'click',
+    async () => {
+
+      showModalStep(
+          modalStepAccount
+      );
+
+      await loadAccounts();
+
+    }
+);
+
+
+/* ============================================================
+   LOAD ACCOUNTS
+   ============================================================ */
+
+async function loadAccounts() {
+
+  accountGrid.innerHTML = `
+    <div class="account-loading">
+
+      <div class="account-loading-spinner"></div>
+
+      <span>
+        Loading bank accounts…
+      </span>
+
+    </div>
   `;
 
-  accountGrid.innerHTML = '<div class="skeleton-row"></div><div class="skeleton-row"></div>';
-  showStep(stepLogin);
 
   try {
-    const accounts = await api.listAccounts();
-    if (accounts.length === 0) {
-      accountGrid.innerHTML = `<div class="empty-state"><div class="empty-state-title">No test accounts seeded</div></div>`;
+
+    const accounts =
+        await api.listAccounts();
+
+
+    if (!accounts ||
+        accounts.length === 0) {
+
+      accountGrid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-title">
+            No test accounts available
+          </div>
+
+          <div class="empty-state-sub">
+            Please check your DataSeeder.
+          </div>
+        </div>
+      `;
+
       return;
     }
-    accountGrid.innerHTML = accounts.map((a) => `
-      <div class="account-card" data-account="${escapeHtml(a.accountNo)}">
-        <div>
-          <div class="account-name">${escapeHtml(a.holderName)}</div>
-          <div class="account-no">${escapeHtml(a.accountNo)}</div>
+
+
+    accountGrid.innerHTML =
+        accounts.map(
+            (account) => {
+
+              return `
+            <button
+              type="button"
+              class="account-card"
+              data-account="${escapeHtml(account.accountNo)}"
+            >
+
+              <div class="account-card-left">
+
+                <div class="account-bank-mini">
+                  D
+                </div>
+
+                <div>
+
+                  <div class="account-name">
+                    ${escapeHtml(account.holderName)}
+                  </div>
+
+                  <div class="account-no">
+                    •••• •••• ${escapeHtml(
+                  account.accountNo.slice(-4)
+              )}
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="account-card-right">
+
+                <span class="account-balance-label">
+                  Available balance
+                </span>
+
+                <span class="account-balance">
+                  ${formatCurrency(
+                  account.balance
+              )}
+                </span>
+
+              </div>
+
+              <div class="account-arrow">
+                →
+              </div>
+
+            </button>
+          `;
+
+            }
+        ).join('')
+        + `
+        <button
+          type="button"
+          class="account-card"
+          data-account="0000000000"
+        >
+
+          <div class="account-card-left">
+
+            <div class="account-bank-mini">
+              ?
+            </div>
+
+            <div>
+
+              <div class="account-name">
+                Unregistered Account
+              </div>
+
+              <div class="account-no">
+                0000 0000 00
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="account-card-right">
+
+            <span class="account-balance-label">
+              Test Scenario
+            </span>
+
+            <span class="account-balance invalid-balance">
+              Invalid Account
+            </span>
+
+          </div>
+
+          <div class="account-arrow">
+            →
+          </div>
+
+        </button>
+      `;
+
+
+    accountGrid
+        .querySelectorAll(
+            '.account-card'
+        )
+        .forEach(
+            (card) => {
+
+              card.addEventListener(
+                  'click',
+                  () => {
+
+                    authorizePayment(
+                        card.dataset.account,
+                        card
+                    );
+
+                  }
+              );
+
+            }
+        );
+
+
+  } catch (error) {
+
+    accountGrid.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-state-title">
+          Unable to load accounts
         </div>
-        <div class="account-balance">${formatCurrency(a.balance)}</div>
-      </div>
-    `).join('') + `
-      <div class="account-card" data-account="0000000000">
-        <div>
-          <div class="account-name">Unregistered account</div>
-          <div class="account-no">0000000000 (not in bank records)</div>
+
+        <div class="empty-state-sub">
+          ${escapeHtml(
+        error.message
+    )}
         </div>
-        <div class="account-balance muted">test: invalid account</div>
+
       </div>
     `;
 
-    accountGrid.querySelectorAll('.account-card').forEach((card) => {
-      card.addEventListener('click', () => authorizePayment(card.dataset.account, card));
-    });
-  } catch (err) {
-    toast.error(`Could not load accounts: ${err.message}`);
+    toast.error(
+        `Could not load accounts: ${error.message}`
+    );
+
   }
+
 }
 
-async function authorizePayment(accountNo, cardEl) {
-  document.querySelectorAll('.account-card').forEach((c) => c.classList.add('selecting'));
-  cardEl.classList.add('selecting');
+
+/* ============================================================
+   ACCOUNT SELECTED
+   ============================================================ */
+
+async function authorizePayment(
+    accountNo,
+    cardElement
+) {
+
+  /*
+   * Prevent multiple clicks.
+   */
+  document
+      .querySelectorAll(
+          '.account-card'
+      )
+      .forEach(
+          (card) => {
+
+            card.disabled = true;
+
+            card.classList.add(
+                'disabled-account'
+            );
+
+          }
+      );
+
+
+  cardElement.classList.add(
+      'selected-account'
+  );
+
+
+  /*
+   * Show bank-style loading screen.
+   */
+  showModalStep(
+      modalStepProcessing
+  );
+
+
+  /*
+   * Change progress text during
+   * the 2–3 second simulated flow.
+   */
+  const loadingTimers = [
+
+    window.setTimeout(
+        () => {
+
+          processingStepTwo.classList.add(
+              'active'
+          );
+
+          processingMessage.textContent =
+              'Your bank is securely processing the transaction…';
+
+        },
+        650
+    ),
+
+
+    window.setTimeout(
+        () => {
+
+          processingStepThree.classList.add(
+              'active'
+          );
+
+          processingMessage.textContent =
+              'Waiting for payment confirmation…';
+
+        },
+        1400
+    )
+
+  ];
+
+
+  const startedAt =
+      Date.now();
+
 
   try {
-    const behavior = callbackBehaviorSelect.value || undefined;
-    const result = await api.completePayment(currentPrn, accountNo, behavior);
-    renderReceipt(result);
-    showStep(stepResult);
-  } catch (err) {
-    toast.error(`Could not complete payment: ${err.message}`);
-    document.querySelectorAll('.account-card').forEach((c) => c.classList.remove('selecting'));
+
+    const behavior =
+        callbackBehaviorSelect.value
+        || undefined;
+
+
+    /*
+     * IMPORTANT:
+     *
+     * This is still the original backend API.
+     *
+     * Backend callback and automatic
+     * Double Verification remain unchanged.
+     */
+    const result =
+        await api.completePayment(
+            currentPrn,
+            accountNo,
+            behavior
+        );
+
+
+    /*
+     * Make sure the loading state stays
+     * visible for at least 2.3 seconds.
+     *
+     * This makes the bank simulator feel
+     * like a real payment gateway.
+     */
+    const minimumLoadingTime =
+        2300;
+
+    const elapsed =
+        Date.now() - startedAt;
+
+    const remaining =
+        Math.max(
+            0,
+            minimumLoadingTime - elapsed
+        );
+
+
+    if (remaining > 0) {
+
+      await new Promise(
+          (resolve) =>
+              window.setTimeout(
+                  resolve,
+                  remaining
+              )
+      );
+
+    }
+
+
+    loadingTimers.forEach(
+        (timer) =>
+            window.clearTimeout(timer)
+    );
+
+
+    processingMessage.textContent =
+        'Payment confirmed.';
+
+
+    renderReceipt(
+        result
+    );
+
+
+    showModalStep(
+        modalStepResult
+    );
+
+
+  } catch (error) {
+
+    loadingTimers.forEach(
+        (timer) =>
+            window.clearTimeout(timer)
+    );
+
+
+    toast.error(
+        `Could not complete payment: ${error.message}`
+    );
+
+
+    showModalStep(
+        modalStepAccount
+    );
+
+
+    document
+        .querySelectorAll(
+            '.account-card'
+        )
+        .forEach(
+            (card) => {
+
+              card.disabled = false;
+
+              card.classList.remove(
+                  'disabled-account'
+              );
+
+            }
+        );
+
   }
+
 }
 
-// ---------- Step 3: receipt ----------
-function renderReceipt(result) {
-  const stamp = stampClass(result.status);
-  const label = displayStatus(result.status);
+
+/* ============================================================
+   PAYMENT RESULT
+   ============================================================ */
+
+function renderReceipt(
+    result
+) {
+
+  const stamp =
+      stampClass(
+          result.status
+      );
+
+  const label =
+      displayStatus(
+          result.status
+      );
+
+
+  const isSuccess =
+      result.status === 'SUCCESS';
+
 
   receiptCard.innerHTML = `
-    <div class="receipt-title">Dhanlaxmi Bank · Payment ${displayStatus(result.status) === 'SUCCESS' ? 'Receipt' : 'Result'}</div>
-    <div class="stamp ${stamp}"><span>${label}</span></div>
-    <div class="receipt-amount">${formatCurrency(currentAmount)}</div>
-    ${result.failureReason ? `<div class="receipt-reason">${humanizeReason(result.failureReason)}</div>` : ''}
-    <div class="receipt-table">
-      <div class="receipt-row"><span class="k">PRN</span><span class="v">${escapeHtml(result.prn)}</span></div>
-      <div class="receipt-row"><span class="k">Account</span><span class="v">${escapeHtml(result.accountNo)}</span></div>
-      <div class="receipt-row"><span class="k">Callback status</span><span class="v">${escapeHtml(result.callbackStatus)}</span></div>
-      <div class="receipt-row"><span class="k">Time</span><span class="v">${formatDate(new Date().toISOString())}</span></div>
+
+    <div class="receipt-top">
+
+      <div class="receipt-bank-mark">
+        DB
+      </div>
+
+      <div class="receipt-bank-name">
+        Dhanlaxmi Bank
+      </div>
+
     </div>
+
+
+    <div class="receipt-title">
+
+      ${
+      isSuccess
+          ? 'Payment Successful'
+          : 'Payment Result'
+  }
+
+    </div>
+
+
+    <div class="stamp ${stamp}">
+      <span>
+        ${label}
+      </span>
+    </div>
+
+
+    <div class="receipt-amount">
+
+      ${formatCurrency(
+      currentAmount
+  )}
+
+    </div>
+
+
+    ${
+      result.failureReason
+          ? `
+          <div class="receipt-reason">
+
+            ${humanizeReason(
+              result.failureReason
+          )}
+
+          </div>
+        `
+          : ''
+  }
+
+
+    <div class="receipt-status-message">
+
+      ${
+      isSuccess
+          ? 'Your payment has been processed successfully.'
+          : 'The payment was processed by the simulator.'
+  }
+
+    </div>
+
+
+    <div class="receipt-table">
+
+      <div class="receipt-row">
+
+        <span class="k">
+          PRN
+        </span>
+
+        <span class="v">
+          ${escapeHtml(
+      result.prn
+  )}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span class="k">
+          Account
+        </span>
+
+        <span class="v">
+          ${escapeHtml(
+      result.accountNo
+  )}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span class="k">
+          Payment method
+        </span>
+
+        <span class="v">
+          Net Banking
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span class="k">
+          Callback status
+        </span>
+
+        <span class="v">
+          ${escapeHtml(
+      result.callbackStatus
+  )}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span class="k">
+          Time
+        </span>
+
+        <span class="v">
+          ${formatDate(
+      new Date().toISOString()
+  )}
+        </span>
+
+      </div>
+
+    </div>
+
   `;
+
 }
 
-newPaymentBtn.addEventListener('click', resetFlow);
+
+/* ============================================================
+   MAKE ANOTHER PAYMENT
+   ============================================================ */
+
+newPaymentBtn.addEventListener(
+    'click',
+    () => {
+
+      resetFlow();
+
+    }
+);
+
+
+/* ============================================================
+   CLOSE POPUP
+   ============================================================ */
+
+paymentModalClose.addEventListener(
+    'click',
+    () => {
+
+      closePaymentModal();
+
+    }
+);
+
+
+/*
+ * Clicking outside popup closes it only
+ * before processing/result.
+ */
+paymentModalBackdrop.addEventListener(
+    'click',
+    (event) => {
+
+      if (
+          event.target !==
+          paymentModalBackdrop
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+          !modalStepProcessing.classList.contains(
+              'hidden'
+          )
+          &&
+          modalStepResult.classList.contains(
+              'hidden'
+          )
+      ) {
+
+        closePaymentModal();
+
+      }
+
+    }
+);
+
+
+/*
+ * Escape key.
+ */
+document.addEventListener(
+    'keydown',
+    (event) => {
+
+      if (
+          event.key === 'Escape'
+          &&
+          !paymentModalBackdrop.classList.contains(
+              'hidden'
+          )
+      ) {
+
+        if (
+            modalStepProcessing.classList.contains(
+                'hidden'
+            )
+        ) {
+
+          closePaymentModal();
+
+        }
+
+      }
+
+    }
+);
+
+
+/* ============================================================
+   ROUTER ENTRY
+   ============================================================ */
 
 export function renderPayment() {
-  resetFlow();
+
+  /*
+   * Don't reset the current payment if
+   * the page is being rendered normally.
+   */
+  if (!currentPrn) {
+
+    form.reset();
+
+  }
+
 }

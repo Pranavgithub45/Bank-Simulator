@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dhanlaxmi Bank Simulator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dhanlaxmi Bank Simulator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <div class="app-shell">
 
-  <!-- ===== Sidebar ===== -->
+  <!-- =========================================================
+       SIDEBAR
+       ========================================================= -->
   <aside class="sidebar">
+
     <div class="brand">
       <div class="brand-mark">DB</div>
+
       <div class="brand-text">
         <span class="brand-name">Dhanlaxmi</span>
         <span class="brand-sub">Bank Simulator</span>
@@ -23,172 +31,1072 @@
     </div>
 
     <nav class="nav">
-      <a href="#dashboard" class="nav-item" data-route="dashboard">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+
+      <a href="#dashboard"
+         class="nav-item"
+         data-route="dashboard">
+
+        <svg class="nav-icon"
+             viewBox="0 0 24 24"
+             fill="none">
+
+          <rect x="3"
+                y="3"
+                width="7"
+                height="9"
+                rx="1.5"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+          <rect x="14"
+                y="3"
+                width="7"
+                height="5"
+                rx="1.5"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+          <rect x="14"
+                y="12"
+                width="7"
+                height="9"
+                rx="1.5"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+          <rect x="3"
+                y="16"
+                width="7"
+                height="5"
+                rx="1.5"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+        </svg>
+
         <span>Dashboard</span>
       </a>
-      <a href="#payment" class="nav-item" data-route="payment">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 9.5h19" stroke="currentColor" stroke-width="1.6"/><path d="M6 14.5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+
+      <a href="#payment"
+         class="nav-item"
+         data-route="payment">
+
+        <svg class="nav-icon"
+             viewBox="0 0 24 24"
+             fill="none">
+
+          <rect x="2.5"
+                y="5.5"
+                width="19"
+                height="13"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+          <path d="M2.5 9.5h19"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+          <path d="M6 14.5h5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"/>
+        </svg>
+
         <span>Make Payment</span>
       </a>
-      <a href="#transactions" class="nav-item" data-route="transactions">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M5 3h9l5 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12h8M8 16h8M8 8h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+
+      <a href="#transactions"
+         class="nav-item"
+         data-route="transactions">
+
+        <svg class="nav-icon"
+             viewBox="0 0 24 24"
+             fill="none">
+
+          <path d="M5 3h9l5 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"/>
+
+          <path d="M8 12h8M8 16h8M8 8h4"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"/>
+        </svg>
+
         <span>Transactions</span>
       </a>
+
     </nav>
 
     <div class="sidebar-footer">
-      <div class="env-line"><span class="env-dot"></span> Simulator online</div>
-      <div class="env-detail">mercode <code id="envMercode">—</code></div>
-      <div class="env-detail">bank id <code id="envBankId">—</code></div>
+
+      <div class="env-line">
+        <span class="env-dot"></span>
+        Simulator online
+      </div>
+
+      <div class="env-detail">
+        mercode
+        <code id="envMercode">—</code>
+      </div>
+
+      <div class="env-detail">
+        bank id
+        <code id="envBankId">—</code>
+      </div>
+
     </div>
+
   </aside>
 
-  <!-- ===== Main content ===== -->
+
+  <!-- =========================================================
+       MAIN
+       ========================================================= -->
   <div class="main">
 
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:14px;">
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+
+      <div class="topbar-left">
+
+        <button class="menu-toggle"
+                id="menuToggle"
+                aria-label="Toggle menu">
+
+          <svg width="20"
+               height="20"
+               viewBox="0 0 24 24"
+               fill="none">
+
+            <path d="M3 6h18M3 12h18M3 18h18"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
+
+          </svg>
+
         </button>
-        <h1 class="topbar-title" id="pageTitle">Dashboard</h1>
+
+        <div>
+          <h1 class="topbar-title"
+              id="pageTitle">
+            Dashboard
+          </h1>
+
+          <div class="topbar-subtitle">
+            Payment simulation environment
+          </div>
+        </div>
+
       </div>
-      <div class="topbar-clock" id="clock">--:--:--</div>
+
+      <div class="topbar-clock"
+           id="clock">
+        --:--:--
+      </div>
+
     </header>
+
 
     <main class="content">
 
-      <!-- ---------- DASHBOARD ---------- -->
-      <section class="view" id="view-dashboard">
+      <!-- =====================================================
+           DASHBOARD
+           ===================================================== -->
+      <section class="view"
+               id="view-dashboard">
+
+        <div class="hero-banner">
+
+          <div class="hero-content">
+
+            <div class="hero-eyebrow">
+              DHANLAXMI BANK
+            </div>
+
+            <h2>
+              Payment Simulator
+            </h2>
+
+            <p>
+              Simulate secure payment flows, bank callbacks
+              and transaction outcomes in a controlled environment.
+            </p>
+
+          </div>
+
+          <div class="hero-glow hero-glow-one"></div>
+          <div class="hero-glow hero-glow-two"></div>
+
+        </div>
+
+
         <div class="stat-grid">
+
           <div class="stat-card">
-            <span class="stat-label">Total Transactions</span>
-            <span class="stat-value" id="statTotal">0</span>
+            <span class="stat-label">
+              Total Transactions
+            </span>
+
+            <span class="stat-value"
+                  id="statTotal">
+              0
+            </span>
           </div>
+
+
           <div class="stat-card stat-success">
-            <span class="stat-label">Successful</span>
-            <span class="stat-value" id="statSuccess">0</span>
+            <span class="stat-label">
+              Successful
+            </span>
+
+            <span class="stat-value"
+                  id="statSuccess">
+              0
+            </span>
           </div>
+
+
           <div class="stat-card stat-failure">
-            <span class="stat-label">Failed</span>
-            <span class="stat-value" id="statFailure">0</span>
+            <span class="stat-label">
+              Failed
+            </span>
+
+            <span class="stat-value"
+                  id="statFailure">
+              0
+            </span>
           </div>
+
+
           <div class="stat-card stat-neutral">
-            <span class="stat-label">Processing</span>
-            <span class="stat-value" id="statProcessing">0</span>
+            <span class="stat-label">
+              Processing
+            </span>
+
+            <span class="stat-value"
+                  id="statProcessing">
+              0
+            </span>
           </div>
+
+
           <div class="stat-card stat-neutral">
-            <span class="stat-label">Callbacks Dropped</span>
-            <span class="stat-value" id="statDropped">0</span>
+            <span class="stat-label">
+              Callbacks Dropped
+            </span>
+
+            <span class="stat-value"
+                  id="statDropped">
+              0
+            </span>
           </div>
+
+
           <div class="stat-card stat-neutral">
-            <span class="stat-label">Callbacks Failed</span>
-            <span class="stat-value" id="statCallbackFailed">0</span>
+            <span class="stat-label">
+              Callbacks Failed
+            </span>
+
+            <span class="stat-value"
+                  id="statCallbackFailed">
+              0
+            </span>
           </div>
+
         </div>
+
 
         <div class="panel">
+
           <div class="panel-head">
-            <h2>Recent Transactions</h2>
-            <a href="#transactions" class="link">View all →</a>
+
+            <h2>
+              Recent Transactions
+            </h2>
+
+            <a href="#transactions"
+               class="link">
+              View all →
+            </a>
+
           </div>
-          <div id="recentTransactions" class="table-wrap"></div>
+
+          <div id="recentTransactions"
+               class="table-wrap">
+          </div>
+
         </div>
+
       </section>
 
-      <!-- ---------- MAKE PAYMENT ---------- -->
-      <section class="view" id="view-payment">
 
-        <!-- Step 1: amount -->
-        <div class="panel narrow" id="paymentStepAmount">
-          <div class="panel-head"><h2>New Payment</h2></div>
-          <p class="panel-sub">Enter an amount to pay via Dhanlaxmi Bank Net Banking. Your order reference (PRN) is generated automatically.</p>
+      <!-- =====================================================
+           PAYMENT PAGE
+           ===================================================== -->
+      <section class="view"
+               id="view-payment">
 
-          <form id="paymentForm" class="form">
-            <label class="field">
-              <span>Amount</span>
-              <div class="amount-input">
-                <span class="currency-prefix">₹</span>
-                <input type="number" id="amountInput" min="1" step="0.01" placeholder="0.00" required>
+
+        <div class="payment-page">
+
+          <!-- LEFT -->
+          <div class="payment-main-card">
+
+            <div class="payment-page-header">
+
+              <div>
+
+                <span class="section-eyebrow">
+                  SECURE CHECKOUT
+                </span>
+
+                <h2>
+                  Make a Payment
+                </h2>
+
+                <p>
+                  Complete your payment using Dhanlaxmi Bank
+                  Net Banking.
+                </p>
+
               </div>
-            </label>
-            <label class="field">
-              <span>Merchant order note <em>(optional)</em></span>
-              <input type="text" id="merchantNote" placeholder="e.g. Order #4521 - Wireless earbuds">
-            </label>
-            <button type="submit" class="btn btn-primary btn-block" id="payBtn">
-              <span class="btn-label">Pay Now</span>
-              <span class="spinner" hidden></span>
-            </button>
-          </form>
-        </div>
 
-        <!-- Step 2: bank login (choose account) -->
-        <div class="panel narrow hidden" id="paymentStepLogin">
-          <div class="panel-head">
-            <h2>Dhanlaxmi Bank — Net Banking</h2>
-          </div>
-          <div class="bank-request-summary" id="bankRequestSummary"></div>
+              <div class="secure-icon">
+                <svg viewBox="0 0 24 24"
+                     fill="none">
 
-          <p class="panel-sub">Select a test account to sign in and authorize this payment.</p>
-          <div class="account-grid" id="accountGrid"></div>
+                  <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"/>
 
-          <details class="advanced">
-            <summary>Simulate callback delivery issue</summary>
-            <div class="field">
-              <select id="callbackBehaviorSelect">
-                <option value="">Normal (default)</option>
-                <option value="DELAY">Delay</option>
-                <option value="DROP">Drop</option>
-                <option value="DUPLICATE">Duplicate</option>
-              </select>
+                  <path d="M9 12l2 2 4-4"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                </svg>
+              </div>
+
             </div>
-          </details>
+
+
+            <form id="paymentForm"
+                  class="form payment-form">
+
+              <label class="field">
+
+                <span>
+                  Payment Amount
+                </span>
+
+                <div class="amount-input">
+
+                  <span class="currency-prefix">
+                    ₹
+                  </span>
+
+                  <input
+                          type="number"
+                          id="amountInput"
+                          min="1"
+                          step="0.01"
+                          placeholder="0.00"
+                          required
+                  >
+
+                </div>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>
+                  Merchant order note
+                  <em>(optional)</em>
+                </span>
+
+                <input
+                        type="text"
+                        id="merchantNote"
+                        placeholder="e.g. Order #4521 - Wireless earbuds"
+                >
+
+              </label>
+
+
+              <div class="payment-method-preview">
+
+                <div class="method-preview-icon">
+
+                  <svg viewBox="0 0 24 24"
+                       fill="none">
+
+                    <rect x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="2"
+                          stroke="currentColor"
+                          stroke-width="1.6"/>
+
+                    <path d="M3 9h18"
+                          stroke="currentColor"
+                          stroke-width="1.6"/>
+
+                    <path d="M7 14h4"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linecap="round"/>
+
+                  </svg>
+
+                </div>
+
+                <div class="method-preview-text">
+
+                  <strong>
+                    Net Banking
+                  </strong>
+
+                  <span>
+                    Pay securely through your bank account
+                  </span>
+
+                </div>
+
+                <span class="method-only-badge">
+                  Available
+                </span>
+
+              </div>
+
+
+              <button
+                      type="submit"
+                      class="btn btn-gradient btn-block btn-large"
+                      id="payBtn">
+
+                <span class="btn-label">
+                  Make Payment
+                </span>
+
+                <span class="spinner"
+                      hidden>
+                </span>
+
+              </button>
+
+            </form>
+
+          </div>
+
+
+          <!-- RIGHT -->
+          <div class="payment-side-card">
+
+            <div class="side-card-icon">
+
+              <svg viewBox="0 0 24 24"
+                   fill="none">
+
+                <path d="M4 10h16M5 10v9M9 10v9M15 10v9M19 10v9M3 19h18M12 4l9 5H3l9-5Z"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linejoin="round"/>
+
+              </svg>
+
+            </div>
+
+            <h3>
+              Dhanlaxmi Bank
+            </h3>
+
+            <p>
+              Secure test environment for simulating
+              bank payment processing.
+            </p>
+
+            <div class="side-divider"></div>
+
+            <div class="side-point">
+              <span class="side-point-dot"></span>
+              Net Banking available
+            </div>
+
+            <div class="side-point">
+              <span class="side-point-dot"></span>
+              Realistic payment loading
+            </div>
+
+            <div class="side-point">
+              <span class="side-point-dot"></span>
+              Automated callback processing
+            </div>
+
+            <div class="side-point">
+              <span class="side-point-dot"></span>
+              Automatic verification
+            </div>
+
+          </div>
+
         </div>
 
-        <!-- Step 3: result -->
-        <div class="panel narrow hidden" id="paymentStepResult">
-          <div class="receipt" id="receiptCard"></div>
-          <div class="result-actions">
-            <button class="btn btn-ghost" id="newPaymentBtn">Make another payment</button>
-          </div>
-        </div>
 
       </section>
 
-      <!-- ---------- TRANSACTIONS ---------- -->
-      <section class="view" id="view-transactions">
+
+      <!-- =====================================================
+           TRANSACTIONS
+           ===================================================== -->
+      <section class="view"
+               id="view-transactions">
+
         <div class="panel">
+
           <div class="panel-head">
-            <h2>All Transactions</h2>
+
+            <h2>
+              All Transactions
+            </h2>
+
             <div class="toolbar">
-              <input type="text" id="txnSearch" placeholder="Search PRN, BID, account…" class="search-input">
-              <select id="txnStatusFilter" class="filter-select">
-                <option value="">All statuses</option>
-                <option value="RECEIVED">Received</option>
-                <option value="SUCCESS">Success</option>
-                <option value="FAILURE">Failure</option>
+
+              <input
+                      type="text"
+                      id="txnSearch"
+                      placeholder="Search PRN, BID, account…"
+                      class="search-input"
+              >
+
+              <select
+                      id="txnStatusFilter"
+                      class="filter-select">
+
+                <option value="">
+                  All statuses
+                </option>
+
+                <option value="RECEIVED">
+                  Received
+                </option>
+
+                <option value="SUCCESS">
+                  Success
+                </option>
+
+                <option value="FAILURE">
+                  Failure
+                </option>
+
               </select>
-              <button class="btn btn-ghost btn-sm" id="refreshTxnBtn">Refresh</button>
+
+              <button
+                      class="btn btn-ghost btn-sm"
+                      id="refreshTxnBtn">
+
+                Refresh
+
+              </button>
+
             </div>
+
           </div>
-          <div id="transactionsTable" class="table-wrap"></div>
+
+          <div id="transactionsTable"
+               class="table-wrap">
+          </div>
+
         </div>
+
       </section>
 
     </main>
+
   </div>
+
 </div>
 
-<!-- ===== Toast host ===== -->
-<div class="toast-host" id="toastHost"></div>
 
-<!-- ===== Modal host ===== -->
-<div class="modal-backdrop hidden" id="modalBackdrop">
-  <div class="modal" id="modalBox"></div>
+<!-- =========================================================
+     PAYMENT POPUP
+     ========================================================= -->
+<div class="payment-modal-backdrop hidden"
+     id="paymentModalBackdrop">
+
+  <div class="payment-modal"
+       id="paymentModal">
+
+
+    <!-- CLOSE -->
+    <button
+            class="payment-modal-close"
+            id="paymentModalClose"
+            type="button"
+            aria-label="Close">
+
+      ×
+
+    </button>
+
+
+    <!-- =======================================================
+         MODAL STEP 1 — PAYMENT METHOD
+         ======================================================= -->
+    <div class="payment-modal-step"
+         id="modalStepMethod">
+
+      <div class="bank-modal-brand">
+
+        <div class="bank-modal-logo">
+          DB
+        </div>
+
+        <div>
+          <div class="bank-modal-name">
+            Dhanlaxmi Bank
+          </div>
+
+          <div class="bank-modal-sub">
+            Secure Net Banking
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="modal-progress">
+
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+
+      </div>
+
+
+      <div class="modal-heading">
+
+        <span class="section-eyebrow">
+          STEP 1
+        </span>
+
+        <h2>
+          Select Payment Method
+        </h2>
+
+        <p>
+          Choose how you want to pay this order.
+        </p>
+
+      </div>
+
+
+      <div class="payment-option selected">
+
+        <div class="payment-option-radio">
+          <span></span>
+        </div>
+
+        <div class="payment-option-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none">
+
+            <rect x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"/>
+
+            <path d="M3 9h18"
+                  stroke="currentColor"
+                  stroke-width="1.6"/>
+
+            <path d="M7 14h4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"/>
+
+          </svg>
+
+        </div>
+
+        <div class="payment-option-info">
+
+          <strong>
+            Net Banking
+          </strong>
+
+          <span>
+            Pay directly from your bank account
+          </span>
+
+        </div>
+
+        <span class="payment-option-badge">
+          Available
+        </span>
+
+      </div>
+
+
+      <div class="order-summary-mini">
+
+        <div>
+          <span>
+            Amount
+          </span>
+
+          <strong id="modalAmount">
+            ₹0.00
+          </strong>
+        </div>
+
+        <div>
+          <span>
+            Merchant
+          </span>
+
+          <strong id="modalMerchant">
+            —
+          </strong>
+        </div>
+
+      </div>
+
+
+      <button
+              class="btn btn-gradient btn-block"
+              id="continueNetbankingBtn"
+              type="button">
+
+        Continue with Net Banking
+      </button>
+
+    </div>
+
+
+    <!-- =======================================================
+         MODAL STEP 2 — ACCOUNT
+         ======================================================= -->
+    <div class="payment-modal-step hidden"
+         id="modalStepAccount">
+
+      <div class="bank-modal-brand">
+
+        <div class="bank-modal-logo">
+          DB
+        </div>
+
+        <div>
+          <div class="bank-modal-name">
+            Dhanlaxmi Bank
+          </div>
+
+          <div class="bank-modal-sub">
+            Net Banking
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="modal-progress">
+
+        <span class="active"></span>
+        <span class="active"></span>
+        <span></span>
+
+      </div>
+
+
+      <div class="modal-heading">
+
+        <span class="section-eyebrow">
+          STEP 2
+        </span>
+
+        <h2>
+          Select Bank Account
+        </h2>
+
+        <p>
+          Choose the test account you want to use for this payment.
+        </p>
+
+      </div>
+
+
+      <div class="bank-login-info">
+
+        <div class="bank-login-info-row">
+
+          <span>
+            Amount
+          </span>
+
+          <strong id="accountModalAmount">
+            ₹0.00
+          </strong>
+
+        </div>
+
+        <div class="bank-login-info-row">
+
+          <span>
+            PRN
+          </span>
+
+          <code id="accountModalPrn">
+            —
+          </code>
+
+        </div>
+
+      </div>
+
+
+      <div class="account-grid"
+           id="accountGrid">
+
+      </div>
+
+
+      <details class="advanced">
+
+        <summary>
+          Advanced simulation controls
+        </summary>
+
+        <div class="field">
+
+          <label>
+            Callback behavior
+          </label>
+
+          <select id="callbackBehaviorSelect">
+
+            <option value="">
+              Normal (default)
+            </option>
+
+            <option value="DELAY">
+              Delay
+            </option>
+
+            <option value="DROP">
+              Drop
+            </option>
+
+            <option value="DUPLICATE">
+              Duplicate
+            </option>
+
+          </select>
+
+        </div>
+
+      </details>
+
+    </div>
+
+
+    <!-- =======================================================
+         MODAL STEP 3 — PROCESSING
+         ======================================================= -->
+    <div class="payment-modal-step hidden"
+         id="modalStepProcessing">
+
+      <div class="processing-screen">
+
+        <div class="processing-orbit">
+
+          <div class="orbit-ring"></div>
+          <div class="orbit-ring orbit-ring-two"></div>
+
+          <div class="processing-bank-logo">
+            DB
+          </div>
+
+        </div>
+
+
+        <div class="processing-copy">
+
+          <span class="section-eyebrow">
+            SECURE CONNECTION
+          </span>
+
+          <h2>
+            Processing your payment
+          </h2>
+
+          <p id="processingMessage">
+            Connecting securely to Dhanlaxmi Bank…
+          </p>
+
+        </div>
+
+
+        <div class="processing-steps">
+
+          <div class="processing-step active"
+               id="processingStepOne">
+
+            <span class="processing-step-icon">
+              ✓
+            </span>
+
+            <div>
+              <strong>
+                Payment request received
+              </strong>
+
+              <small>
+                Your request has been accepted
+              </small>
+            </div>
+
+          </div>
+
+
+          <div class="processing-step"
+               id="processingStepTwo">
+
+            <span class="processing-step-icon">
+              2
+            </span>
+
+            <div>
+              <strong>
+                Bank processing
+              </strong>
+
+              <small>
+                Verifying your payment
+              </small>
+            </div>
+
+          </div>
+
+
+          <div class="processing-step"
+               id="processingStepThree">
+
+            <span class="processing-step-icon">
+              3
+            </span>
+
+            <div>
+              <strong>
+                Finalizing transaction
+              </strong>
+
+              <small>
+                Waiting for confirmation
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         MODAL STEP 4 — RESULT
+         ======================================================= -->
+    <div class="payment-modal-step hidden"
+         id="modalStepResult">
+
+      <div class="bank-modal-brand">
+
+        <div class="bank-modal-logo">
+          DB
+        </div>
+
+        <div>
+          <div class="bank-modal-name">
+            Dhanlaxmi Bank
+          </div>
+
+          <div class="bank-modal-sub">
+            Transaction Result
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="modal-progress">
+
+        <span class="active"></span>
+        <span class="active"></span>
+        <span class="active"></span>
+
+      </div>
+
+
+      <div class="receipt"
+           id="receiptCard">
+      </div>
+
+
+      <div class="result-actions">
+
+        <button
+                class="btn btn-gradient btn-block"
+                id="newPaymentBtn"
+                type="button">
+
+          Make Another Payment
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
-<script type="module" src="js/main.js"></script>
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+<div class="toast-host"
+     id="toastHost">
+</div>
+
+
+<!-- =========================================================
+     OLD GENERAL MODAL
+     ========================================================= -->
+<div class="modal-backdrop hidden"
+     id="modalBackdrop">
+
+  <div class="modal"
+       id="modalBox">
+  </div>
+
+</div>
+
+
+<script type="module"
+        src="js/main.js">
+</script>
+
 </body>
 </html>
