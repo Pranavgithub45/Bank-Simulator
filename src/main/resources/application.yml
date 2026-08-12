@@ -1,0 +1,51 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/dhanlaxmi-simulator;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+dhanbank:
+  bank-id: "001"
+  merchant-code: "BLDKPG001C"
+  currency: "INR"
+  application-type: "Corporate"
+  language-id: "001"
+  user-type: "1"
+  checksum-algorithm: "SHA-512"
+  encryption-algorithm: "AES-256"
+  encryption-key-hex: "79244226452948404D635166546A576E5A7234753777217A25432A462D4A614E"
+  # No IV is documented for this bank, so ECB (no IV needed) is the default.
+  # Update this the moment the real bank reference/test vector says otherwise.
+  cipher-transformation: "AES/ECB/PKCS5Padding"
+  # How long a DELAY-behavior callback (and TIMEOUT-tagged accounts) wait
+  # before sending, in seconds.
+  callback-delay-seconds: 5
+  # Default RU (return URL) used by /test/sample-payment-payload. Points at
+  # this app's own built-in mock BillDesk receiver (see
+  # BillDeskCallbackReceiverController) so a NORMAL callback actually has
+  # something reachable to deliver to. Previously this was
+  # http://localhost:8081/callback - nothing was ever listening on that
+  # port, so every callback attempt failed with a connection error
+  # regardless of the payment's own outcome. Update this once a real
+  # BillDesk callback URL is available to test against.
+#  default-return-url: "http://localhost:8082/billdesk/callback-receiver"
+  default-return-url: "http://localhost:8082/billdesk/callback-receiver"
+
+logging:
+  level:
+    com.simulator.dhanlaxmi: INFO

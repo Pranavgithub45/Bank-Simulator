@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+dhanbank:
+  bank-id: "001"
+  merchant-code: "BLDKPG001C"
+  currency: "INR"
+  application-type: "Corporate"
+  language-id: "001"
+  user-type: "1"
+  checksum-algorithm: "SHA-512"
+  encryption-algorithm: "AES-256"
+  encryption-key-hex: "79244226452948404D635166546A576E5A7234753777217A25432A462D4A614E"
+  cipher-transformation: "AES/ECB/PKCS5Padding"
